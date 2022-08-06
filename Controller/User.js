@@ -2,6 +2,8 @@ import bcrypt from 'bcrypt'
 import User from '../Model/User.js'
 import { createError } from '../utils/error.js'
 import jwt from 'jsonwebtoken'
+import File from '../Model/UploadFile.js'
+import cloudinary from '../Cloud/index.js'
 
 export const SignUp = async (req, res, next) => {
     try {
@@ -59,6 +61,29 @@ export const UpdateProfile = async (req, res, next) => {
     try {
         const Update_Profile = await User.findByIdAndUpdate({ _id: req.user._id }, { ...req.body })
         res.status(200).send("User has been Updated.");
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const UploadFile = async (req, res, next) => {
+
+    try {
+        if (req.file) {
+            // console.log(req.file);
+            const result = await cloudinary.uploader.upload(
+                req.file.path
+            );
+            console.log(result);
+            const Upload_file = new File({ name: req.file.originalname, user_id: req.user._id, url: result.url })
+            await Upload_file.save();
+            res.status(200).send("File has been Uploaded.");
+        }
+        else {
+
+            return next(createError(404, "Upload failed "))
+        }
+
     } catch (error) {
         next(error)
     }
