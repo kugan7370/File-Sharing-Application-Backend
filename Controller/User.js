@@ -29,22 +29,37 @@ export const SignUp = async (req, res, next) => {
 }
 
 export const login = async (req, res, next) => {
+    try {
+        const getUser = await User.findOne({ email: req.body.email })
 
-    const getUser = await User.findOne({ email: req.body.email })
+        if (!getUser)
+            return res.status(400).json({ message: 'invalid email' });
 
-    if (!getUser)
-        return res.status(400).json({ message: 'invalid email' });
+        const isPasswordCorrect = await bcrypt.compare(req.body.Password, getUser.Password)
 
-    const isPasswordCorrect = await bcrypt.compare(req.body.Password, getUser.Password)
+        if (!isPasswordCorrect)
+            return next(createError(404, "Invalid Password "))
 
-    if (!isPasswordCorrect)
-        return next(createError(404, "Invalid Password "))
+        const token = jwt.sign({ _id: getUser._id }, process.env.JWT_SECRET, { expiresIn: '3d' });
 
-    const token = jwt.sign({ _id: getUser._id }, process.env.JWT_SECRET, { expiresIn: '3d' });
+        const { Password, ...otherDetails } = getUser._doc;
+        res.cookie("access_token", token, {
+            httpOnly: true,
+        }).status(200).json({ token, user: otherDetails })
+    } catch (error) {
+        next(error)
+    }
 
-    const { Password, ...otherDetails } = getUser._doc;
-    res.cookie("access_token", token, {
-        httpOnly: true,
-    }).status(200).json({ token, user: otherDetails })
 
+
+}
+
+
+export const UpdateProfile = async (req, res, next) => {
+    try {
+        const Update_Profile = await User.findByIdAndUpdate({ _id: req.user._id }, { ...req.body })
+        res.status(200).send("User has been Updated.");
+    } catch (error) {
+        next(error)
+    }
 }
