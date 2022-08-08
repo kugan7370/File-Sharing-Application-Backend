@@ -58,8 +58,17 @@ export const login = async (req, res, next) => {
 
 
 export const UpdateProfile = async (req, res, next) => {
+    const uploadata = { ...req.body }
     try {
-        const Update_Profile = await User.findByIdAndUpdate({ _id: req.user._id }, { ...req.body })
+        if (req.file) {
+            console.log(req.file);
+            const result = await cloudinary.uploader.upload(
+                req.file.path
+            );
+            uploadata.profile_image = result.url
+        }
+
+        const Update_Profile = await User.findByIdAndUpdate({ _id: req.user._id }, { ...uploadata })
         res.status(200).send("User has been Updated.");
     } catch (error) {
         next(error)
@@ -92,7 +101,7 @@ export const UploadFile = async (req, res, next) => {
 
 export const GetFile = async (req, res, next) => {
     try {
-        const Get_File = await File.find()
+        const Get_File = await File.find().sort({ "createdAt": -1 })
         res.status(200).json(Get_File)
     } catch (error) {
         next(error)
@@ -107,3 +116,4 @@ export const DeleteFile = async (req, res, next) => {
         next(error)
     }
 }
+

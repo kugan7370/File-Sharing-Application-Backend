@@ -13,16 +13,17 @@ router.post('/login', login)
 
 
 //user-update
-router.put('/updateProfile', verifyUser, UpdateProfile)
+router.put('/updateProfile', verifyUser, multerfile.single("profile_image"), UpdateProfile)
+
 
 // file-upload
 router.post('/uploadFile', verifyUser, multerfile.single("url"), UploadFile)
 
-// file-upload
+// file-get
 router.get('/getfile', verifyUser, GetFile)
 
 //file-delete
-router.get('/deletefile/:id', verifyUser, DeleteFile)
+router.delete('/deletefile/:id', verifyUser, DeleteFile)
 
 
 
