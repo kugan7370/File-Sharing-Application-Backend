@@ -1,6 +1,6 @@
 import express from 'express'
 import multer from 'multer';
-import { login, SignUp, UpdateProfile, UploadFile } from '../Controller/User.js'
+import { DeleteFile, GetFile, login, SignUp, UpdateProfile, UploadFile } from '../Controller/User.js'
 import { multerfile } from '../middleware/Multer.js';
 import { isRequestValidated, validateSignupRequest } from '../middleware/Validator.js';
 import { verifyUser } from '../middleware/VarifyUser.js';
@@ -17,5 +17,15 @@ router.put('/updateProfile', verifyUser, UpdateProfile)
 
 // file-upload
 router.post('/uploadFile', verifyUser, multerfile.single("url"), UploadFile)
+
+// file-upload
+router.get('/getfile', verifyUser, GetFile)
+
+//file-delete
+router.get('/deletefile/:id', verifyUser, DeleteFile)
+
+
+
+
 
 export default router;
