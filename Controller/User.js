@@ -4,6 +4,7 @@ import { createError } from '../utils/error.js'
 import jwt from 'jsonwebtoken'
 import File from '../Model/UploadFile.js'
 import cloudinary from '../Cloud/index.js'
+import FileShare from '../Model/FileShare.js'
 
 export const SignUp = async (req, res, next) => {
     try {
@@ -116,4 +117,28 @@ export const DeleteFile = async (req, res, next) => {
         next(error)
     }
 }
+
+
+
+export const FileShares = async (req, res, next) => {
+
+    try {
+        const File_Share = new FileShare({ ...req.body })
+        await File_Share.save()
+        res.status(200).send("File has been Shared Sucessfully.");
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const GetAllUser = async (req, res, next) => {
+    try {
+        const Get_All_User = await User.find()
+        res.status(200).json(Get_All_User)
+    } catch (error) {
+        next(error)
+    }
+}
+
+
 
