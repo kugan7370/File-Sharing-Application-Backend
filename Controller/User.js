@@ -88,3 +88,22 @@ export const UploadFile = async (req, res, next) => {
         next(error)
     }
 }
+
+
+export const GetFile = async (req, res, next) => {
+    try {
+        const Get_File = await File.find()
+        res.status(200).json(Get_File)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const DeleteFile = async (req, res, next) => {
+    try {
+        const Delete_File = await File.findByIdAndDelete({ _id: req.params.id })
+        res.status(200).send("File has been Deleted.");
+    } catch (error) {
+        next(error)
+    }
+}
