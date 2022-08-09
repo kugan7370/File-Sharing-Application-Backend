@@ -80,7 +80,6 @@ export const UploadFile = async (req, res, next) => {
 
     try {
         if (req.file) {
-            // console.log(req.file);
             const result = await cloudinary.uploader.upload(
                 req.file.path
             );
@@ -141,4 +140,21 @@ export const GetAllUser = async (req, res, next) => {
 }
 
 
+export const GetSharedFile = async (req, res, next) => {
+    try {
+        const Get_Shared_File = await FileShare.find().sort({ "createdAt": -1 })
+        res.status(200).json(Get_Shared_File)
+    } catch (error) {
+        next(error)
+    }
+}
 
+
+export const DeleteSharedFile = async (req, res, next) => {
+    try {
+        const Delete_Shared_File = await FileShare.findByIdAndDelete({ _id: req.params.id })
+        res.status(200).send("File has been Deleted.");
+    } catch (error) {
+        next(error)
+    }
+}

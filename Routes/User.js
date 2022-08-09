@@ -1,6 +1,6 @@
 import express from 'express'
 import multer from 'multer';
-import { DeleteFile, FileShares, GetAllUser, GetFile, login, SignUp, UpdateProfile, UploadFile } from '../Controller/User.js'
+import { DeleteFile, DeleteSharedFile, FileShares, GetAllUser, GetFile, GetSharedFile, login, SignUp, UpdateProfile, UploadFile } from '../Controller/User.js'
 import { multerfile } from '../middleware/Multer.js';
 import { isRequestValidated, validateSignupRequest } from '../middleware/Validator.js';
 import { verifyUser } from '../middleware/VarifyUser.js';
@@ -29,6 +29,12 @@ router.post('/fileshare', verifyUser, FileShares)
 
 // get-All-user
 router.get('/getalluser', verifyUser, GetAllUser)
+
+// get-All-shared-file
+router.get('/getsharedfile', verifyUser, GetSharedFile)
+
+//Shared-file-delete
+router.delete('/deletesharedfile/:id', verifyUser, DeleteSharedFile)
 
 
 

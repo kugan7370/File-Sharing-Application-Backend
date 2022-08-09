@@ -5,11 +5,19 @@ const FileShare = new mongoose.Schema({
         type: String,
         required: true,
     },
-    sender_id: {
+    name: {
         type: String,
         required: true,
     },
-    receiver_id: {
+    url: {
+        type: String,
+        required: true,
+    },
+    sender_name: {
+        type: String,
+        required: true,
+    },
+    receiver_name: {
         type: String,
         required: true,
     },
